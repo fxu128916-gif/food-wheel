@@ -27,24 +27,12 @@
     -webkit-user-select: none;
   }
 
-  /* ---- 顶部装饰 ---- */
-  .header {
-    text-align: center;
-    margin-bottom: 8px;
-  }
-  .header h1 {
-    font-size: 30px;
-    font-weight: 800;
-    color: var(--text);
-    letter-spacing: 2px;
-  }
-  .header .subtitle {
-    font-size: 13px;
-    color: #A8A29E;
-    margin-top: 4px;
-  }
+  .header { text-align: center; margin-bottom: 8px; }
+  .header h1 { font-size: 30px; font-weight: 800; color: var(--text); letter-spacing: 2px; }
+  .header .subtitle { font-size: 13px; color: #A8A29E; margin-top: 4px; }
+  .header .data-info { font-size: 11px; color: #D6D3D1; margin-top: 2px; }
 
-  /* ---- 转盘容器 ---- */
+  /* ---- 转盘 ---- */
   .wheel-wrapper {
     position: relative;
     width: min(330px, 82vw);
@@ -52,97 +40,47 @@
     margin: 12px auto 20px;
   }
   .wheel-pointer {
-    position: absolute;
-    top: -20px;
-    left: 50%;
-    transform: translateX(-50%);
-    z-index: 10;
-    width: 0;
-    height: 0;
-    border-left: 20px solid transparent;
-    border-right: 20px solid transparent;
+    position: absolute; top: -20px; left: 50%; transform: translateX(-50%); z-index: 10;
+    width: 0; height: 0;
+    border-left: 20px solid transparent; border-right: 20px solid transparent;
     border-top: 36px solid var(--primary);
     filter: drop-shadow(0 2px 3px rgba(0,0,0,0.2));
   }
   canvas#wheelCanvas {
-    width: 100%;
-    height: 100%;
-    border-radius: 50%;
-    box-shadow: 0 8px 30px rgba(0,0,0,0.12);
-    transition: transform 0.1s ease-out;
-    cursor: pointer;
+    width: 100%; height: 100%; border-radius: 50%;
+    box-shadow: 0 8px 30px rgba(0,0,0,0.12); cursor: pointer;
   }
   .wheel-center {
-    position: absolute;
-    top: 50%; left: 50%;
-    transform: translate(-50%,-50%);
-    width: 56px; height: 56px;
-    border-radius: 50%;
-    background: white;
+    position: absolute; top: 50%; left: 50%; transform: translate(-50%,-50%);
+    width: 56px; height: 56px; border-radius: 50%; background: white;
     box-shadow: 0 2px 12px rgba(0,0,0,0.15);
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    font-size: 28px;
-    cursor: pointer;
-    z-index: 5;
-    transition: transform 0.15s;
+    display: flex; align-items: center; justify-content: center;
+    font-size: 28px; cursor: pointer; z-index: 5; transition: transform 0.15s;
   }
   .wheel-center:active { transform: translate(-50%,-50%) scale(0.9); }
 
-  /* ---- 按钮区 ---- */
-  .btn-row {
-    display: flex;
-    gap: 12px;
-    flex-wrap: wrap;
-    justify-content: center;
-    margin-bottom: 16px;
-  }
+  /* ---- 按钮 ---- */
+  .btn-row { display: flex; gap: 12px; flex-wrap: wrap; justify-content: center; margin-bottom: 16px; }
   .btn {
-    padding: 13px 26px;
-    border-radius: 50px;
-    border: none;
-    font-size: 16px;
-    font-weight: 700;
-    cursor: pointer;
-    transition: all 0.2s;
-    letter-spacing: 1px;
+    padding: 13px 26px; border-radius: 50px; border: none;
+    font-size: 16px; font-weight: 700; cursor: pointer;
+    transition: all 0.2s; letter-spacing: 1px;
   }
-  .btn-primary {
-    background: var(--primary);
-    color: white;
-    box-shadow: 0 4px 15px rgba(249,115,22,0.35);
-  }
-  .btn-primary:active {
-    transform: scale(0.95);
-    box-shadow: 0 2px 8px rgba(249,115,22,0.3);
-  }
-  .btn-outline {
-    background: white;
-    color: var(--primary);
-    border: 2px solid var(--primary);
-  }
+  .btn-primary { background: var(--primary); color: white; box-shadow: 0 4px 15px rgba(249,115,22,0.35); }
+  .btn-primary:active { transform: scale(0.95); box-shadow: 0 2px 8px rgba(249,115,22,0.3); }
+  .btn-outline { background: white; color: var(--primary); border: 2px solid var(--primary); }
   .btn-outline:active { transform: scale(0.95); }
 
-  /* ---- 结果弹窗 ---- */
+  /* ---- 弹窗 ---- */
   .result-overlay {
-    position: fixed; inset: 0;
-    background: rgba(0,0,0,0.5);
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    z-index: 100;
-    opacity: 0; pointer-events: none;
-    transition: opacity 0.3s;
+    position: fixed; inset: 0; background: rgba(0,0,0,0.5);
+    display: flex; align-items: center; justify-content: center;
+    z-index: 100; opacity: 0; pointer-events: none; transition: opacity 0.3s;
   }
   .result-overlay.show { opacity: 1; pointer-events: auto; }
   .result-card {
-    background: white;
-    border-radius: 24px;
-    padding: 36px 28px;
-    text-align: center;
-    max-width: 320px;
-    width: 85%;
+    background: white; border-radius: 24px; padding: 36px 28px;
+    text-align: center; max-width: 320px; width: 85%;
     box-shadow: 0 20px 60px rgba(0,0,0,0.2);
     animation: popIn 0.35s cubic-bezier(0.175, 0.885, 0.32, 1.275);
   }
@@ -150,205 +88,33 @@
     from { transform: scale(0.7); opacity: 0; }
     to { transform: scale(1); opacity: 1; }
   }
-  .result-emoji {
-    font-size: 72px;
-    margin-bottom: 10px;
-    animation: bounce 0.5s ease infinite alternate;
-  }
-  @keyframes bounce {
-    from { transform: translateY(0); }
-    to { transform: translateY(-10px); }
-  }
-  .result-text {
-    font-size: 28px;
-    font-weight: 800;
-    color: var(--text);
-    margin-bottom: 8px;
-  }
-  .result-sub {
-    font-size: 14px;
-    color: #999;
-    margin-bottom: 20px;
-  }
-  .result-actions {
-    display: flex;
-    gap: 10px;
-    justify-content: center;
-    flex-wrap: wrap;
-  }
-  .result-actions .btn {
-    padding: 12px 22px;
-    font-size: 14px;
-  }
+  .result-emoji { font-size: 72px; margin-bottom: 10px; animation: bounce 0.5s ease infinite alternate; }
+  @keyframes bounce { from { transform: translateY(0); } to { transform: translateY(-10px); } }
+  .result-text { font-size: 28px; font-weight: 800; color: var(--text); margin-bottom: 8px; }
+  .result-sub { font-size: 14px; color: #999; margin-bottom: 20px; }
+  .result-actions { display: flex; gap: 10px; justify-content: center; flex-wrap: wrap; }
+  .result-actions .btn { padding: 12px 22px; font-size: 14px; }
 
-  /* ---- 选项管理器 ---- */
-  .manager-section {
-    width: 100%;
-    max-width: 380px;
-    margin-top: 4px;
-  }
-  .manager-toggle {
-    width: 100%;
-    text-align: center;
-    font-size: 13px;
-    color: #A8A29E;
-    padding: 8px;
-    cursor: pointer;
-    border: none;
-    background: none;
-    transition: color 0.2s;
-  }
-  .manager-toggle:hover { color: var(--primary); }
-  .manager-panel {
-    background: var(--card);
-    border-radius: 16px;
-    padding: 18px;
-    box-shadow: var(--shadow);
-    display: none;
-    margin-top: 4px;
-  }
-  .manager-panel.open { display: block; }
-  .manager-panel h3 {
-    font-size: 15px;
-    margin-bottom: 14px;
-    color: #666;
-    text-align: center;
-  }
-  .option-row {
-    display: flex;
-    align-items: center;
-    gap: 8px;
-    margin-bottom: 8px;
-  }
-  .option-row input[type="text"] {
-    flex: 1;
-    padding: 10px 12px;
-    border: 1.5px solid #E7E5E4;
-    border-radius: 10px;
-    font-size: 14px;
-    outline: none;
-    background: #FAFAF9;
-    transition: border-color 0.2s;
-  }
-  .option-row input[type="text"]:focus { border-color: var(--primary); background: white; }
-  .option-row .del-btn {
-    width: 34px; height: 34px;
-    border-radius: 50%;
-    border: none;
-    background: #FEE2E2;
-    color: #EF4444;
-    font-size: 16px;
-    cursor: pointer;
-    flex-shrink: 0;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    transition: all 0.15s;
-  }
-  .option-row .del-btn:active { background: #FCA5A5; color: white; }
+  /* ---- 底部信息 ---- */
+  .food-list-section { width: 100%; max-width: 380px; margin-top: 20px; text-align: center; }
+  .food-list-title { font-size: 12px; color: #A8A29E; margin-bottom: 8px; }
+  .food-tags { display: flex; flex-wrap: wrap; gap: 6px; justify-content: center; }
+  .food-tag { padding: 4px 12px; border-radius: 20px; background: white; font-size: 12px; color: #78716C; border: 1px solid #E7E5E4; }
 
-  .add-btn {
-    width: 100%;
-    padding: 11px;
-    border-radius: 10px;
-    border: 2px dashed #D6D3D1;
-    background: none;
-    color: #A8A29E;
-    font-size: 14px;
-    cursor: pointer;
-    margin-top: 6px;
-    transition: all 0.2s;
-  }
-  .add-btn:hover, .add-btn:active {
-    border-color: var(--primary);
-    color: var(--primary);
-    background: #FFF7ED;
-  }
-
-  /* ---- 快捷添加 ---- */
-  .quick-add-section {
-    width: 100%;
-    max-width: 380px;
-    margin-top: 12px;
-  }
-  .quick-add-section .label {
-    font-size: 12px;
-    color: #A8A29E;
-    text-align: center;
-    margin-bottom: 8px;
-  }
-  .quick-tags {
-    display: flex;
-    flex-wrap: wrap;
-    gap: 8px;
-    justify-content: center;
-  }
-  .quick-tag {
-    padding: 6px 14px;
-    border-radius: 20px;
-    border: 1.5px solid #E7E5E4;
-    background: white;
-    font-size: 13px;
-    color: #57534E;
-    cursor: pointer;
-    transition: all 0.2s;
-  }
-  .quick-tag:hover { border-color: var(--primary); color: var(--primary); background: #FFF7ED; }
-  .quick-tag.added {
-    border-color: var(--secondary);
-    color: var(--secondary);
-    background: #F0FDF4;
-    cursor: default;
-    pointer-events: none;
-  }
-
-  /* ---- 历史记录 ---- */
-  .history-section {
-    width: 100%;
-    max-width: 380px;
-    margin-top: 14px;
-  }
-  .history-title {
-    font-size: 12px;
-    color: #A8A29E;
-    text-align: center;
-    margin-bottom: 6px;
-    cursor: pointer;
-  }
-  .history-bar {
-    display: flex;
-    gap: 6px;
-    flex-wrap: wrap;
-    justify-content: center;
-  }
-  .history-tag {
-    padding: 5px 14px;
-    border-radius: 20px;
-    background: #F5F5F4;
-    font-size: 12px;
-    color: #78716C;
-    transition: all 0.15s;
-  }
-  .clear-history {
-    font-size: 11px;
-    color: #ccc;
-    cursor: pointer;
-    display: block;
-    text-align: center;
-    margin-top: 6px;
-    border: none;
-    background: none;
-  }
+  /* ---- 历史 ---- */
+  .history-section { width: 100%; max-width: 380px; margin-top: 14px; }
+  .history-title { font-size: 12px; color: #A8A29E; text-align: center; margin-bottom: 6px; }
+  .history-bar { display: flex; gap: 6px; flex-wrap: wrap; justify-content: center; }
+  .history-tag { padding: 5px 14px; border-radius: 20px; background: #F5F5F4; font-size: 12px; color: #78716C; }
+  .clear-history { font-size: 11px; color: #ccc; cursor: pointer; display: block; text-align: center; margin-top: 6px; border: none; background: none; }
   .clear-history:hover { color: #EF4444; }
 
-  /* footer */
-  .footer {
-    margin-top: auto;
-    padding-top: 20px;
-    font-size: 11px;
-    color: #D6D3D1;
-    text-align: center;
-  }
+  /* 加载中 */
+  .loading { text-align: center; padding: 60px; color: #A8A29E; font-size: 16px; }
+  .loading .spinner { display: inline-block; width: 30px; height: 30px; border: 3px solid #E7E5E4; border-top-color: var(--primary); border-radius: 50%; animation: spin 0.8s linear infinite; margin-bottom: 12px; }
+  @keyframes spin { to { transform: rotate(360deg); } }
+
+  .footer { margin-top: auto; padding-top: 20px; font-size: 11px; color: #D6D3D1; text-align: center; }
 </style>
 </head>
 <body>
@@ -356,80 +122,54 @@
 <div class="header">
   <h1>🍜 今天吃什么？</h1>
   <p class="subtitle">转转大转盘，告别纠结！</p>
+  <p class="data-info" id="updateInfo"></p>
 </div>
 
-<div class="wheel-wrapper" id="wheelWrapper">
-  <div class="wheel-pointer"></div>
-  <canvas id="wheelCanvas"></canvas>
-  <div class="wheel-center" id="spinBtn">🍽️</div>
+<div id="loadingBox" class="loading">
+  <div class="spinner"></div>
+  <div>美食加载中...</div>
 </div>
 
-<div class="btn-row">
-  <button class="btn btn-primary" onclick="spin()">🎰 转一转</button>
-  <button class="btn btn-outline" onclick="quickPick()">🎲 随手选</button>
-</div>
+<div id="mainBox" style="display:none;width:100%;display:none;flex-direction:column;align-items:center;">
+  <div class="wheel-wrapper" id="wheelWrapper">
+    <div class="wheel-pointer"></div>
+    <canvas id="wheelCanvas"></canvas>
+    <div class="wheel-center" id="spinBtn">🍽️</div>
+  </div>
 
-<div class="result-overlay" id="resultOverlay">
-  <div class="result-card">
-    <div class="result-emoji" id="resultEmoji"></div>
-    <div class="result-text" id="resultText"></div>
-    <div class="result-sub" id="resultSub"></div>
-    <div class="result-actions">
-      <button class="btn btn-outline" onclick="closeResult()">👌 就它了</button>
-      <button class="btn btn-primary" onclick="closeResult();spin();">🔄 再转一次</button>
+  <div class="btn-row">
+    <button class="btn btn-primary" onclick="spin()">🎰 转一转</button>
+    <button class="btn btn-outline" onclick="quickPick()">🎲 随手选</button>
+  </div>
+
+  <div class="result-overlay" id="resultOverlay">
+    <div class="result-card">
+      <div class="result-emoji" id="resultEmoji"></div>
+      <div class="result-text" id="resultText"></div>
+      <div class="result-sub" id="resultSub"></div>
+      <div class="result-actions">
+        <button class="btn btn-outline" onclick="closeResult()">👌 就它了</button>
+        <button class="btn btn-primary" onclick="closeResult();spin();">🔄 再转一次</button>
+      </div>
     </div>
   </div>
-</div>
 
-<div class="manager-section">
-  <button class="manager-toggle" onclick="toggleManager()">➕ 管理我的美食清单 <span id="toggleArrow">▾</span></button>
-  <div class="manager-panel" id="managerPanel">
-    <h3>📝 编辑美食（会自动保存）</h3>
-    <div id="optionList"></div>
-    <button class="add-btn" onclick="addOption()">＋ 添加美食</button>
+  <div class="food-list-section">
+    <p class="food-list-title">📋 当前美食清单（管理员维护）</p>
+    <div class="food-tags" id="foodTags"></div>
+  </div>
+
+  <div class="history-section">
+    <p class="history-title">📜 最近转到的</p>
+    <div class="history-bar" id="historyBar"></div>
+    <button class="clear-history" onclick="clearHistory()" id="clearHistoryBtn" style="display:none;">清除记录</button>
   </div>
 </div>
 
-<div class="quick-add-section">
-  <p class="label">🔥 热门美食，点一下就添加</p>
-  <div class="quick-tags" id="quickTags"></div>
-</div>
-
-<div class="history-section">
-  <p class="history-title">📜 最近转到的</p>
-  <div class="history-bar" id="historyBar"></div>
-  <button class="clear-history" onclick="clearHistory()" id="clearHistoryBtn" style="display:none;">清除记录</button>
-</div>
-
-<div class="footer">✨ 自己动手，丰衣足食 ✨</div>
+<div class="footer">✨ 数据由管理员统一维护 ✨</div>
 
 <script>
-// ========== 默认美食选项 ==========
-const DEFAULT_OPTIONS = [
-  { name: '火锅', emoji: '🫕' },
-  { name: '麻辣烫', emoji: '🌶️' },
-  { name: '烤肉', emoji: '🥩' },
-  { name: '饺子', emoji: '🥟' },
-  { name: '寿司', emoji: '🍣' },
-  { name: '披萨', emoji: '🍕' },
-];
-
-// 热门备选
-const POPULAR_FOODS = [
-  { name: '兰州拉面', emoji: '🍜' },
-  { name: '黄焖鸡', emoji: '🍗' },
-  { name: '煲仔饭', emoji: '🍚' },
-  { name: '螺蛳粉', emoji: '🍲' },
-  { name: '炸鸡', emoji: '🍗' },
-  { name: '汉堡', emoji: '🍔' },
-  { name: '意面', emoji: '🍝' },
-  { name: '韩式拌饭', emoji: '🍛' },
-  { name: '酸菜鱼', emoji: '🐟' },
-  { name: '烧烤', emoji: '🍖' },
-  { name: '沙县小吃', emoji: '🥡' },
-  { name: '麻辣香锅', emoji: '🥘' },
-];
-
+const DATA_URL = 'data.json';
 const COLORS = [
   '#FF6B6B', '#4ECDC4', '#FFD93D', '#6C5CE7', '#A8E6CF',
   '#FF8A80', '#80D8FF', '#FFE082', '#B388FF', '#CCFF90',
@@ -437,27 +177,14 @@ const COLORS = [
   '#FF9FF3', '#54A0FF', '#5F27CD', '#01A3A4', '#F368E0',
 ];
 
-// ========== 状态 ==========
-let options = loadOptions();
+let options = [];
 let history = loadHistory();
 let currentAngle = 0;
 let spinning = false;
 
-// ========== 持久化 ==========
-function loadOptions() {
-  try {
-    const saved = localStorage.getItem('food_wheel_options');
-    if (saved) return JSON.parse(saved);
-  } catch(e) {}
-  return [...DEFAULT_OPTIONS];
-}
-function saveOptions() { localStorage.setItem('food_wheel_options', JSON.stringify(options)); }
-
+// ========== 历史记录 ==========
 function loadHistory() {
-  try {
-    const saved = localStorage.getItem('food_wheel_history');
-    if (saved) return JSON.parse(saved);
-  } catch(e) {}
+  try { const s = localStorage.getItem('food_wheel_history'); if (s) return JSON.parse(s); } catch(e) {}
   return [];
 }
 function saveHistory() { localStorage.setItem('food_wheel_history', JSON.stringify(history.slice(-20))); }
@@ -484,47 +211,35 @@ function drawWheel() {
   if (n === 0) return;
   const sliceAngle = (2 * Math.PI) / n;
 
-  // 画扇区
   options.forEach((opt, i) => {
     const startAngle = currentAngle + i * sliceAngle - Math.PI / 2;
     const endAngle = startAngle + sliceAngle;
-
-    // 扇形
     ctx.beginPath();
     ctx.moveTo(cx, cy);
     ctx.arc(cx, cy, outerR, startAngle, endAngle);
     ctx.closePath();
     ctx.fillStyle = COLORS[i % COLORS.length];
     ctx.fill();
-
-    // 边框
     ctx.strokeStyle = 'rgba(255,255,255,0.7)';
     ctx.lineWidth = 2;
     ctx.stroke();
 
-    // 文字
     const midAngle = startAngle + sliceAngle / 2;
     const textR = outerR * 0.6;
     const tx = cx + textR * Math.cos(midAngle);
     const ty = cy + textR * Math.sin(midAngle);
-
     ctx.save();
     ctx.translate(tx, ty);
     ctx.rotate(midAngle + Math.PI / 2);
     ctx.fillStyle = '#1C1917';
-    ctx.font = 'bold 14px "PingFang SC","Microsoft YaHei",sans-serif';
+    const text = opt.emoji + ' ' + opt.name;
+    ctx.font = text.length > 6 ? 'bold 11px "PingFang SC","Microsoft YaHei",sans-serif' : 'bold 14px "PingFang SC","Microsoft YaHei",sans-serif';
     ctx.textAlign = 'center';
     ctx.textBaseline = 'middle';
-    const text = opt.emoji + ' ' + opt.name;
-    // 超长文字缩小字号
-    if (text.length > 6) {
-      ctx.font = 'bold 11px "PingFang SC","Microsoft YaHei",sans-serif';
-    }
     ctx.fillText(text, 0, 0);
     ctx.restore();
   });
 
-  // 外圈光环
   ctx.beginPath();
   ctx.arc(cx, cy, outerR, 0, 2*Math.PI);
   ctx.strokeStyle = 'rgba(0,0,0,0.06)';
@@ -536,17 +251,12 @@ function drawWheel() {
 function spin() {
   if (spinning || options.length === 0) return;
   spinning = true;
-
-  const canvas = document.getElementById('wheelCanvas');
   const n = options.length;
   const sliceAngle = 360 / n;
-
-  // 随机目标扇区
   const targetIndex = Math.floor(Math.random() * n);
   const targetSliceCenter = targetIndex * sliceAngle;
   const extraRounds = (3 + Math.floor(Math.random() * 4)) * 360;
   const totalRotation = extraRounds + (360 - targetSliceCenter);
-
   const startAngleDeg = currentAngle * (180 / Math.PI);
   const duration = 4000 + Math.random() * 1000;
   const startTime = performance.now();
@@ -554,165 +264,97 @@ function spin() {
   function animate(timestamp) {
     const elapsed = timestamp - startTime;
     const progress = Math.min(elapsed / duration, 1);
-    // ease-out
     const eased = 1 - Math.pow(1 - progress, 3.5);
-    const angle = startAngleDeg + totalRotation * eased;
-
-    currentAngle = (angle * Math.PI / 180) % (2 * Math.PI);
+    currentAngle = ((startAngleDeg + totalRotation * eased) * Math.PI / 180) % (2 * Math.PI);
     drawWheel();
-
-    if (progress < 1) {
-      requestAnimationFrame(animate);
-    } else {
+    if (progress < 1) { requestAnimationFrame(animate); }
+    else {
       currentAngle = currentAngle % (2 * Math.PI);
       spinning = false;
-      const result = options[targetIndex];
-      showResult(result);
+      showResult(options[targetIndex]);
     }
   }
-
   requestAnimationFrame(animate);
 }
 
-// 快速随机
 function quickPick() {
   if (options.length === 0) return;
-  const idx = Math.floor(Math.random() * options.length);
-  showResult(options[idx]);
+  showResult(options[Math.floor(Math.random() * options.length)]);
 }
 
-// 趣味文案
-const FUN_TEXTS = [
-  '安排上了！', '就决定是它了！', '冲冲冲！', '今天盘它！', '味蕾已就位🤤',
-  '好吃不纠结！', '冲冲冲！', '来自大转盘的钦点✨', '命运的抉择！',
-];
+const FUN_TEXTS = ['安排上了！','就决定是它了！','今天盘它！','味蕾已就位🤤','好吃不纠结！','来自大转盘的钦点✨','命运的抉择！'];
 
 function showResult(option) {
   document.getElementById('resultEmoji').textContent = option.emoji;
   document.getElementById('resultText').textContent = option.name;
   document.getElementById('resultSub').textContent = FUN_TEXTS[Math.floor(Math.random() * FUN_TEXTS.length)];
   document.getElementById('resultOverlay').classList.add('show');
-
-  // 记录历史
   history.push({ name: option.name, emoji: option.emoji, time: Date.now() });
   saveHistory();
   renderHistory();
 }
 
-function closeResult() {
-  document.getElementById('resultOverlay').classList.remove('show');
-}
+function closeResult() { document.getElementById('resultOverlay').classList.remove('show'); }
 
-// ========== 选项管理 ==========
-function renderOptions() {
-  const container = document.getElementById('optionList');
-  if (!container) return;
-  container.innerHTML = options.map((opt, i) => `
-    <div class="option-row">
-      <input type="text" value="${opt.emoji}" style="width:44px;text-align:center;flex-shrink:0;"
-             onchange="updateOption(${i},'emoji',this.value)" placeholder="🍕">
-      <input type="text" value="${opt.name}" onchange="updateOption(${i},'name',this.value)" placeholder="美食名称">
-      <button class="del-btn" onclick="removeOption(${i})" title="删除">✕</button>
-    </div>
-  `).join('');
-  renderQuickTags();
-}
-
-function updateOption(i, key, value) {
-  options[i][key] = value;
-  saveOptions();
-  drawWheel();
-  renderQuickTags();
-}
-
-function addOption(name, emoji) {
-  options.push({ name: name || '新美食', emoji: emoji || '🍽️' });
-  saveOptions();
-  renderOptions();
-  drawWheel();
-}
-
-function removeOption(i) {
-  if (options.length <= 1) { alert('至少保留一个美食哦~'); return; }
-  const removed = options[i];
-  options.splice(i, 1);
-  saveOptions();
-  renderOptions();
-  drawWheel();
-}
-
-function toggleManager() {
-  const panel = document.getElementById('managerPanel');
-  const arrow = document.getElementById('toggleArrow');
-  if (!panel) return;
-  panel.classList.toggle('open');
-  arrow.textContent = panel.classList.contains('open') ? '▴' : '▾';
-  if (panel.classList.contains('open')) {
-    renderOptions();
+// ========== 加载数据 ==========
+async function loadFoodData() {
+  try {
+    const resp = await fetch(DATA_URL + '?t=' + Date.now());
+    if (!resp.ok) throw new Error('HTTP ' + resp.status);
+    options = await resp.json();
+  } catch(e) {
+    console.warn('加载远程数据失败，使用默认数据', e);
+    options = [
+      { name: '火锅', emoji: '🫕' },
+      { name: '麻辣烫', emoji: '🌶️' },
+      { name: '烤肉', emoji: '🥩' },
+      { name: '饺子', emoji: '🥟' },
+      { name: '寿司', emoji: '🍣' },
+      { name: '披萨', emoji: '🍕' },
+    ];
   }
-}
 
-// ========== 快捷标签 ==========
-function renderQuickTags() {
-  const container = document.getElementById('quickTags');
-  if (!container) return;
-  const existingNames = new Set(options.map(o => o.name));
-  container.innerHTML = POPULAR_FOODS.map(f => {
-    const added = existingNames.has(f.name);
-    return `<span class="quick-tag${added ? ' added' : ''}" onclick="${added ? '' : `addQuickOption('${f.name}','${f.emoji}')`}">${f.emoji} ${f.name}</span>`;
-  }).join('');
-}
+  // 显示
+  document.getElementById('loadingBox').style.display = 'none';
+  const mainBox = document.getElementById('mainBox');
+  mainBox.style.display = 'flex';
 
-function addQuickOption(name, emoji) {
-  // 避免重复
-  if (options.some(o => o.name === name)) return;
-  options.push({ name, emoji });
-  saveOptions();
-  renderOptions();
+  // 更新时间
+  const now = new Date();
+  document.getElementById('updateInfo').textContent = '数据更新于 ' + now.toLocaleString('zh-CN');
+
+  // 渲染
+  renderFoodTags();
   drawWheel();
-  // 小小提示
-  const tag = document.querySelector(`.quick-tag:not(.added)`);
+  renderHistory();
 }
 
-// ========== 历史记录 ==========
+function renderFoodTags() {
+  document.getElementById('foodTags').innerHTML = options.map(o => `<span class="food-tag">${o.emoji} ${o.name}</span>`).join('');
+}
+
+// ========== 历史 ==========
 function renderHistory() {
   const bar = document.getElementById('historyBar');
   const clearBtn = document.getElementById('clearHistoryBtn');
-  if (!bar) return;
   if (history.length === 0) {
     bar.innerHTML = '<span class="history-tag" style="background:none;color:#ccc;">还没有转过呢~</span>';
     if (clearBtn) clearBtn.style.display = 'none';
     return;
   }
   if (clearBtn) clearBtn.style.display = 'block';
-  bar.innerHTML = history.slice(-10).reverse().map(h =>
-    `<span class="history-tag">${h.emoji} ${h.name}</span>`
-  ).join('');
+  bar.innerHTML = history.slice(-10).reverse().map(h => `<span class="history-tag">${h.emoji} ${h.name}</span>`).join('');
 }
 
-function clearHistory() {
-  history = [];
-  saveHistory();
-  renderHistory();
-}
+function clearHistory() { history = []; saveHistory(); renderHistory(); }
 
 // ========== 事件 ==========
-document.getElementById('spinBtn').addEventListener('click', (e) => {
-  e.stopPropagation();
-  spin();
-});
+document.getElementById('spinBtn').addEventListener('click', e => { e.stopPropagation(); spin(); });
 document.getElementById('wheelCanvas').addEventListener('click', spin);
+window.addEventListener('resize', drawWheel);
 
-// ========== 初始化 ==========
-function init() {
-  drawWheel();
-  renderHistory();
-  renderOptions();
-  renderQuickTags();
-  window.addEventListener('resize', drawWheel);
-}
-
-init();
+// ========== 启动 ==========
+loadFoodData();
 </script>
 
 </body>

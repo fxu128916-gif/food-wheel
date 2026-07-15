@@ -1,0 +1,209 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>🔧 美食大转盘 - 管理员</title>
+<style>
+  :root { --bg: #FFFBEB; --primary: #F97316; --text: #1C1917; --card: #FFFFFF; --shadow: 0 4px 20px rgba(0,0,0,0.08); }
+  * { margin:0; padding:0; box-sizing:border-box; }
+  body {
+    font-family: -apple-system, BlinkMacSystemFont, "PingFang SC", "Microsoft YaHei", sans-serif;
+    background: var(--bg); min-height: 100vh; padding: 24px 16px 40px;
+    -webkit-tap-highlight-color: transparent;
+  }
+  .container { max-width: 500px; margin: 0 auto; }
+
+  .header { text-align: center; margin-bottom: 20px; }
+  .header h1 { font-size: 24px; color: var(--text); }
+  .header p { font-size: 13px; color: #A8A29E; margin-top: 4px; }
+  .header .warning {
+    margin-top: 8px; padding: 8px 16px; border-radius: 8px;
+    background: #FEF3C7; color: #92400E; font-size: 12px;
+    display: inline-block;
+  }
+
+  .panel { background: var(--card); border-radius: 16px; padding: 20px; box-shadow: var(--shadow); margin-bottom: 16px; }
+  .panel h3 { font-size: 15px; color: #666; margin-bottom: 14px; text-align: center; }
+
+  .option-row { display: flex; align-items: center; gap: 8px; margin-bottom: 8px; }
+  .option-row input[type="text"] {
+    flex: 1; padding: 10px 12px; border: 1.5px solid #E7E5E4; border-radius: 10px;
+    font-size: 14px; outline: none; background: #FAFAF9; transition: border-color 0.2s;
+  }
+  .option-row input[type="text"]:focus { border-color: var(--primary); background: white; }
+  .option-row .del-btn {
+    width: 34px; height: 34px; border-radius: 50%; border: none;
+    background: #FEE2E2; color: #EF4444; font-size: 16px; cursor: pointer;
+    flex-shrink: 0; display: flex; align-items: center; justify-content: center; transition: all 0.15s;
+  }
+  .option-row .del-btn:active { background: #FCA5A5; color: white; }
+
+  .btn {
+    padding: 12px 24px; border-radius: 50px; border: none;
+    font-size: 14px; font-weight: 700; cursor: pointer; transition: all 0.2s;
+  }
+  .btn-primary { background: var(--primary); color: white; }
+  .btn-primary:active { transform: scale(0.95); }
+  .btn-outline { background: white; color: var(--primary); border: 2px solid var(--primary); }
+  .btn-outline:active { transform: scale(0.95); }
+  .btn-block { width: 100%; padding: 12px; margin-top: 10px; }
+
+  .add-btn {
+    width: 100%; padding: 11px; border-radius: 10px; border: 2px dashed #D6D3D1;
+    background: none; color: #A8A29E; font-size: 14px; cursor: pointer; margin-top: 6px;
+    transition: all 0.2s;
+  }
+  .add-btn:hover, .add-btn:active { border-color: var(--primary); color: var(--primary); background: #FFF7ED; }
+
+  .action-bar { display: flex; gap: 10px; justify-content: center; flex-wrap: wrap; margin-bottom: 20px; }
+
+  .preview-section { text-align: center; }
+  .preview-tags { display: flex; flex-wrap: wrap; gap: 6px; justify-content: center; margin-top: 8px; }
+  .preview-tag { padding: 5px 12px; border-radius: 20px; background: #FFF7ED; font-size: 13px; color: #C2410C; border: 1px solid #FED7AA; }
+
+  .toast {
+    position: fixed; top: 20px; left: 50%; transform: translateX(-50%);
+    background: #1C1917; color: white; padding: 12px 24px;
+    border-radius: 12px; font-size: 14px; z-index: 200;
+    opacity: 0; pointer-events: none; transition: opacity 0.3s;
+  }
+  .toast.show { opacity: 1; pointer-events: auto; }
+</style>
+</head>
+<body>
+<div class="container">
+  <div class="header">
+    <h1>🔧 管理员面板</h1>
+    <p>编辑美食清单 → 下载 JSON → 提交到 GitHub</p>
+    <div class="warning">⚠️ 此页面仅管理员使用，普通用户看不到</div>
+  </div>
+
+  <div class="panel">
+    <h3>📝 美食清单（拖拽排序暂不支持，请用删除+添加来调整）</h3>
+    <div id="optionList"></div>
+    <button class="add-btn" onclick="addOption()">＋ 添加美食</button>
+  </div>
+
+  <div class="panel preview-section">
+    <h3>👀 预览（共 <span id="countLabel">0</span> 项）</h3>
+    <div class="preview-tags" id="previewTags"></div>
+  </div>
+
+  <div class="action-bar">
+    <button class="btn btn-outline" onclick="loadFromRemote()">📥 从线上加载</button>
+    <button class="btn btn-outline" onclick="resetDefaults()">🔄 恢复默认</button>
+  </div>
+
+  <button class="btn btn-primary btn-block" onclick="downloadJSON()">⬇️ 下载 data.json</button>
+
+  <div style="text-align:center;margin-top:12px;font-size:12px;color:#A8A29E;">
+    <p>下载后将 <code>data.json</code> 放到 food-wheel 仓库根目录，</p>
+    <p>然后用 Git 提交推送，或通过 GitHub 网页上传。</p>
+    <p style="margin-top:8px;">
+      <a href="https://github.com/fxu128916-gif/food-wheel/upload/main" target="_blank" style="color:var(--primary);">📤 点此直接上传到 GitHub →</a>
+    </p>
+  </div>
+</div>
+
+<div class="toast" id="toast"></div>
+
+<script>
+let options = [];
+
+// ========== 加载 ==========
+async function loadFromRemote() {
+  try {
+    const resp = await fetch('data.json?t=' + Date.now());
+    if (!resp.ok) throw new Error('HTTP ' + resp.status);
+    options = await resp.json();
+    showToast('✅ 已从线上加载 ' + options.length + ' 项美食');
+  } catch(e) {
+    showToast('❌ 加载失败，使用默认数据');
+    options = getDefaults();
+  }
+  renderAll();
+}
+
+function getDefaults() {
+  return [
+    { name: '火锅', emoji: '🫕' },
+    { name: '麻辣烫', emoji: '🌶️' },
+    { name: '烤肉', emoji: '🥩' },
+    { name: '饺子', emoji: '🥟' },
+    { name: '寿司', emoji: '🍣' },
+    { name: '披萨', emoji: '🍕' },
+  ];
+}
+
+function resetDefaults() {
+  options = getDefaults();
+  renderAll();
+  showToast('🔄 已恢复默认');
+}
+
+// ========== 渲染 ==========
+function renderAll() {
+  renderOptions();
+  renderPreview();
+}
+
+function renderOptions() {
+  const container = document.getElementById('optionList');
+  container.innerHTML = options.map((opt, i) => `
+    <div class="option-row">
+      <input type="text" value="${opt.emoji}" style="width:50px;text-align:center;flex-shrink:0;"
+             onchange="updateOption(${i},'emoji',this.value)" placeholder="🍕">
+      <input type="text" value="${opt.name}" onchange="updateOption(${i},'name',this.value)" placeholder="美食名称">
+      <button class="del-btn" onclick="removeOption(${i})" title="删除">✕</button>
+    </div>
+  `).join('');
+}
+
+function renderPreview() {
+  document.getElementById('previewTags').innerHTML = options.map(o => `<span class="preview-tag">${o.emoji} ${o.name}</span>`).join('');
+  document.getElementById('countLabel').textContent = options.length;
+}
+
+function updateOption(i, key, value) {
+  options[i][key] = value;
+  renderPreview();
+}
+
+function addOption() {
+  options.push({ name: '新美食', emoji: '🍽️' });
+  renderAll();
+}
+
+function removeOption(i) {
+  if (options.length <= 1) { showToast('⚠️ 至少保留一个'); return; }
+  options.splice(i, 1);
+  renderAll();
+}
+
+// ========== 下载 ==========
+function downloadJSON() {
+  const json = JSON.stringify(options, null, 2);
+  const blob = new Blob([json], { type: 'application/json' });
+  const url = URL.createObjectURL(blob);
+  const a = document.createElement('a');
+  a.href = url;
+  a.download = 'data.json';
+  a.click();
+  URL.revokeObjectURL(url);
+  showToast('⬇️ data.json 已下载！请上传到 GitHub 仓库');
+}
+
+// ========== Toast ==========
+function showToast(msg) {
+  const t = document.getElementById('toast');
+  t.textContent = msg;
+  t.classList.add('show');
+  setTimeout(() => t.classList.remove('show'), 2500);
+}
+
+// ========== 初始化 ==========
+loadFromRemote();
+</script>
+</body>
+</html>

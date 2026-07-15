@@ -3,139 +3,179 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>🔧 美食大转盘 - 管理员</title>
+<title>🔧 美食大转盘 - 管理</title>
 <style>
   :root { --bg:#FFFBEB; --primary:#F97316; --text:#1C1917; --card:#FFFFFF; --shadow:0 4px 20px rgba(0,0,0,0.08); }
   * { margin:0; padding:0; box-sizing:border-box; }
   body { font-family: -apple-system,BlinkMacSystemFont,"PingFang SC","Microsoft YaHei",sans-serif; background:var(--bg); min-height:100vh; padding:24px 16px 40px; -webkit-tap-highlight-color:transparent; }
   .container { max-width:500px; margin:0 auto; }
-  .header { text-align:center; margin-bottom:20px; }
-  .header h1 { font-size:24px; color:var(--text); }
+  .header { text-align:center; margin-bottom:16px; }
+  .header h1 { font-size:22px; color:var(--text); }
   .header p { font-size:13px; color:#A8A29E; margin-top:4px; }
   .panel { background:var(--card); border-radius:16px; padding:20px; box-shadow:var(--shadow); margin-bottom:16px; }
-  .panel h3 { font-size:15px; color:#666; margin-bottom:14px; text-align:center; }
+  .panel h3 { font-size:15px; color:#666; margin-bottom:12px; text-align:center; }
+
+  .token-section { background:#FFF7ED; border-radius:12px; padding:16px; margin-bottom:16px; border:1px solid #FED7AA; }
+  .token-section label { font-size:13px; color:#C2410C; font-weight:700; display:block; margin-bottom:4px; }
+  .token-section input { width:100%; padding:10px; border-radius:8px; border:1.5px solid #FED7AA; font-size:12px; font-family:monospace; outline:none; }
+  .token-section input:focus { border-color:var(--primary); }
+  .token-section .hint { font-size:11px; color:#A8A29E; margin-top:4px; }
+  .token-section .saved { color:#16A34A; font-size:12px; margin-top:4px; display:none; }
+
   .option-row { display:flex; align-items:center; gap:8px; margin-bottom:8px; }
-  .option-row input[type="text"] { flex:1; padding:10px 12px; border:1.5px solid #E7E5E4; border-radius:10px; font-size:14px; outline:none; background:#FAFAF9; transition:border-color 0.2s; }
+  .option-row input[type="text"] { flex:1; padding:10px; border:1.5px solid #E7E5E4; border-radius:10px; font-size:14px; outline:none; background:#FAFAF9; }
   .option-row input[type="text"]:focus { border-color:var(--primary); background:white; }
   .option-row .del-btn { width:34px; height:34px; border-radius:50%; border:none; background:#FEE2E2; color:#EF4444; font-size:16px; cursor:pointer; flex-shrink:0; display:flex; align-items:center; justify-content:center; }
-  .option-row .del-btn:active { background:#FCA5A5; color:white; }
+
   .btn { padding:12px 24px; border-radius:50px; border:none; font-size:14px; font-weight:700; cursor:pointer; transition:all 0.2s; }
   .btn-primary { background:var(--primary); color:white; }
   .btn-primary:active { transform:scale(0.95); }
   .btn-green { background:#16A34A; color:white; }
   .btn-green:active { transform:scale(0.95); }
+  .btn-green:disabled { opacity:0.5; cursor:not-allowed; }
   .btn-outline { background:white; color:var(--primary); border:2px solid var(--primary); }
   .btn-block { width:100%; padding:12px; margin-top:10px; }
-  .add-btn { width:100%; padding:11px; border-radius:10px; border:2px dashed #D6D3D1; background:none; color:#A8A29E; font-size:14px; cursor:pointer; margin-top:6px; transition:all 0.2s; }
+  .add-btn { width:100%; padding:11px; border-radius:10px; border:2px dashed #D6D3D1; background:none; color:#A8A29E; font-size:14px; cursor:pointer; margin-top:6px; }
   .add-btn:hover { border-color:var(--primary); color:var(--primary); background:#FFF7ED; }
-  .action-bar { display:flex; gap:10px; justify-content:center; flex-wrap:wrap; margin-bottom:20px; }
-  .preview-section { text-align:center; }
-  .preview-tags { display:flex; flex-wrap:wrap; gap:6px; justify-content:center; margin-top:8px; }
-  .preview-tag { padding:5px 12px; border-radius:20px; background:#FFF7ED; font-size:13px; color:#C2410C; border:1px solid #FED7AA; }
 
-  .toast { position:fixed; top:20px; left:50%; transform:translateX(-50%); background:#1C1917; color:white; padding:12px 24px; border-radius:12px; font-size:14px; z-index:200; opacity:0; pointer-events:none; transition:opacity 0.3s; }
+  .toast { position:fixed; top:20px; left:50%; transform:translateX(-50%); background:#1C1917; color:white; padding:12px 24px; border-radius:12px; font-size:14px; z-index:200; opacity:0; pointer-events:none; transition:opacity 0.3s; white-space:nowrap; }
   .toast.show { opacity:1; }
+  .toast.success { background:#16A34A; }
+  .toast.error { background:#DC2626; }
 
-  .copy-section { margin-top:12px; padding:12px; background:#F0FDF4; border-radius:12px; text-align:center; }
-  .copy-section code { display:block; padding:8px; background:#DCFCE7; border-radius:8px; font-size:12px; word-break:break-all; margin:8px 0; color:#166534; }
-  .copy-section .btn { font-size:12px; padding:8px 16px; }
+  .status { text-align:center; font-size:12px; color:#A8A29E; margin-top:8px; }
+  a { color:var(--primary); }
 </style>
 </head>
 <body>
 <div class="container">
   <div class="header">
-    <h1>🔧 管理员面板</h1>
-    <p>编辑美食 → 下载 JSON → 用脚本一键推送</p>
+    <h1>🔧 美食大转盘管理</h1>
+    <p>编辑后一键保存到云端，所有人同步</p>
+  </div>
+
+  <div class="token-section">
+    <label>🔑 GitHub Token（仅存本地，不提交到仓库）</label>
+    <input type="password" id="tokenInput" placeholder="github_pat_..." onchange="saveToken()">
+    <p class="hint">
+      <a href="https://github.com/settings/personal-access-tokens/new" target="_blank">创建 Fine-grained Token</a> →
+      选 <b>Only select repositories</b> → 选 <b>food-wheel</b> →
+      权限 <b>Contents: Read and write</b> → <b>No expiration</b>
+    </p>
+    <p class="saved" id="tokenSaved">✅ Token 已保存</p>
   </div>
 
   <div class="panel">
-    <h3>📝 美食清单（共 <span id="countLabel">0</span> 项）</h3>
+    <h3>📝 美食清单（<span id="countLabel">0</span> 项）</h3>
     <div id="optionList"></div>
     <button class="add-btn" onclick="addOption()">＋ 添加美食</button>
   </div>
 
-  <div class="panel preview-section">
-    <h3>👀 预览</h3>
-    <div class="preview-tags" id="previewTags"></div>
-  </div>
+  <button class="btn btn-green btn-block" id="saveBtn" onclick="saveToGitHub()">💾 一键保存到云端</button>
+  <div class="status" id="statusEl"></div>
 
-  <div class="action-bar">
-    <button class="btn btn-outline" onclick="loadFromRemote()">📥 加载线上数据</button>
-    <button class="btn btn-outline" onclick="resetDefaults()">🔄 恢复默认</button>
-  </div>
-
-  <button class="btn btn-green btn-block" onclick="downloadJSON()">⬇️ 下载 data.json</button>
-
-  <div class="copy-section" style="margin-top:16px;">
-    <p style="font-size:13px;color:#166534;font-weight:700;">📋 命令行一键推送（复制到终端执行）</p>
-    <code id="pushCmd">正在生成...</code>
-    <button class="btn btn-green" onclick="copyCmd()" style="margin-top:8px;">📋 复制命令</button>
-    <p style="font-size:11px;color:#78716C;margin-top:8px;">下载 data.json 后，打开终端粘贴执行即可推送到 GitHub</p>
+  <div style="margin-top:12px;text-align:center;">
+    <a href="index.html" target="_blank">🔗 打开转盘页面</a>
+    <span style="color:#D6D3D1;"> | </span>
+    <a href="data.json" target="_blank">📄 查看 data.json</a>
   </div>
 </div>
 <div class="toast" id="toast"></div>
 
 <script>
-let options=[];
-const JSON_PATH='C:\\Users\\PC\\.easyclaw\\workspace\\outputs\\food-wheel\\data.json';
+const REPO='fxu128916-gif/food-wheel';
+const FILE='data.json';
 
-async function loadFromRemote(){
-  try{
-    const r=await fetch('data.json?t='+Date.now());
-    if(!r.ok)throw new Error('HTTP '+r.status);
-    options=await r.json(); showToast('✅ 已加载 '+options.length+' 项');
-  }catch(e){ options=getDefaults(); showToast('⚠️ 加载失败，使用默认数据'); }
-  renderAll(); updatePushCmd();
+let options=[];
+let token='';
+let currentSha='';
+
+function getToken(){ return localStorage.getItem('food_admin_token')||''; }
+function saveToken(){
+  token=document.getElementById('tokenInput').value.trim();
+  localStorage.setItem('food_admin_token',token);
+  document.getElementById('tokenSaved').style.display=token?'block':'none';
 }
 
-function getDefaults(){ return [{name:'火锅',emoji:'🫕'},{name:'麻辣烫',emoji:'🌶️'},{name:'烤肉',emoji:'🥩'},{name:'饺子',emoji:'🥟'},{name:'寿司',emoji:'🍣'},{name:'披萨',emoji:'🍕'}]; }
-function resetDefaults(){ options=getDefaults(); renderAll(); updatePushCmd(); showToast('🔄 已恢复默认'); }
+if(getToken()){ document.getElementById('tokenInput').value=getToken(); saveToken(); }
 
-function renderAll(){ renderOptions(); renderPreview(); }
+function getDefaults(){ return [{name:'火锅',emoji:'🫕'},{name:'麻辣烫',emoji:'🌶️'},{name:'烤肉',emoji:'🥩'},{name:'饺子',emoji:'🥟'},{name:'寿司',emoji:'🍣'},{name:'披萨',emoji:'🍕'}]; }
+
+async function loadData(){
+  try{
+    const t=getToken();
+    const url=`https://api.github.com/repos/${REPO}/contents/${FILE}`;
+    const headers={Accept:'application/vnd.github.v3+json'};
+    if(t) headers['Authorization']='Bearer '+t;
+    const r=await fetch(url,{headers});
+    if(!r.ok)throw new Error('HTTP '+r.status);
+    const d=await r.json();
+    currentSha=d.sha;
+    options=JSON.parse(atob(d.content.replace(/\s/g,'')));
+    showToast('✅ 已加载 '+options.length+' 项',true);
+  }catch(e){
+    options=getDefaults();
+    showToast('⚠️ 加载失败，Token 可能不正确');
+  }
+  renderAll();
+}
+
+async function saveToGitHub(){
+  if(!getToken()){ showToast('❌ 请先填入 GitHub Token'); document.getElementById('tokenInput').focus(); return; }
+  const btn=document.getElementById('saveBtn'), st=document.getElementById('statusEl');
+  btn.disabled=true; btn.textContent='⏳ 保存中...'; st.textContent='正在同步到 GitHub...'; st.style.color='#F97316';
+
+  try{
+    // 刷新 SHA
+    const headers={Authorization:'Bearer '+getToken(),Accept:'application/vnd.github.v3+json'};
+    let sha=currentSha;
+    if(!sha){
+      const gr=await fetch(`https://api.github.com/repos/${REPO}/contents/${FILE}`,{headers});
+      if(gr.ok){ const d=await gr.json(); sha=d.sha; }
+    }
+    const content=btoa(unescape(encodeURIComponent(JSON.stringify(options,null,2))));
+    const pr=await fetch(`https://api.github.com/repos/${REPO}/contents/${FILE}`,{
+      method:'PUT', headers:{...headers,'Content-Type':'application/json'},
+      body:JSON.stringify({message:'🍜 更新美食清单 '+new Date().toLocaleString('zh-CN'),content,sha})
+    });
+    if(!pr.ok){ const e=await pr.json(); throw new Error(e.message||'HTTP '+pr.status); }
+
+    const result=await pr.json();
+    currentSha=result.content.sha;
+    btn.textContent='💾 一键保存到云端'; btn.disabled=false;
+    st.textContent='✅ 已保存！1-2分钟后在线上生效';
+    st.style.color='#16A34A';
+    showToast('✅ 保存成功！所有人在线可看到最新数据','success');
+  }catch(e){
+    btn.textContent='💾 一键保存到云端'; btn.disabled=false;
+    st.textContent='❌ '+(e.message||'保存失败');
+    st.style.color='#DC2626';
+    showToast('❌ '+e.message,'error');
+  }
+}
+
+function renderAll(){ renderOptions(); }
 function renderOptions(){
   document.getElementById('optionList').innerHTML=options.map((o,i)=>`
     <div class="option-row">
-      <input type="text" value="${o.emoji}" style="width:50px;text-align:center;flex-shrink:0;" onchange="updateOption(${i},'emoji',this.value)" placeholder="🍕">
-      <input type="text" value="${o.name}" onchange="updateOption(${i},'name',this.value)" placeholder="美食名称">
-      <button class="del-btn" onclick="removeOption(${i})" title="删除">✕</button>
+      <input type="text" value="${o.emoji}" style="width:50px;text-align:center;flex-shrink:0;" onchange="options[${i}].emoji=this.value" placeholder="🍕">
+      <input type="text" value="${o.name}" onchange="options[${i}].name=this.value" placeholder="美食名称">
+      <button class="del-btn" onclick="removeOption(${i})">✕</button>
     </div>
   `).join('');
-}
-function renderPreview(){
-  document.getElementById('previewTags').innerHTML=options.map(o=>`<span class="preview-tag">${o.emoji} ${o.name}</span>`).join('');
   document.getElementById('countLabel').textContent=options.length;
 }
-function updateOption(i,k,v){ options[i][k]=v; renderPreview(); updatePushCmd(); }
-function addOption(){ options.push({name:'新美食',emoji:'🍽️'}); renderAll(); updatePushCmd(); }
-function removeOption(i){ if(options.length<=1){ showToast('⚠️ 至少保留一个'); return; } options.splice(i,1); renderAll(); updatePushCmd(); }
+function addOption(){ options.push({name:'新美食',emoji:'🍽️'}); renderAll(); }
+function removeOption(i){ if(options.length<=1){ showToast('⚠️ 至少保留一个'); return; } options.splice(i,1); renderAll(); }
 
-function downloadJSON(){
-  const json=JSON.stringify(options,null,2);
-  const blob=new Blob([json],{type:'application/json'});
-  const a=document.createElement('a'); a.href=URL.createObjectURL(blob); a.download='data.json'; a.click();
-  URL.revokeObjectURL(a.href);
-  updatePushCmd();
-  showToast('⬇️ data.json 已下载！');
+let toastTimer;
+function showToast(m,isSuccess){
+  const t=document.getElementById('toast');
+  t.textContent=m; t.className='toast '+(isSuccess===true?'success':isSuccess===false?'error':'')+' show';
+  clearTimeout(toastTimer); toastTimer=setTimeout(()=>t.className='toast',3000);
 }
 
-function updatePushCmd(){
-  const json=JSON.stringify(options,null,2);
-  const escaped=json.replace(/\\/g,'\\\\').replace(/"/g,'\\"').replace(/\n/g,'\\n');
-  const cmd=`cd "C:\\Users\\PC\\.easyclaw\\workspace\\outputs\\food-wheel" &amp;&amp; (echo ${escaped} &gt; data.json) &amp;&amp; git add data.json &amp;&amp; git commit -m "🍜 更新美食清单" &amp;&amp; git push`;
-  document.getElementById('pushCmd').textContent=cmd.replace(/&amp;&amp;/g,'&&').replace(/&gt;/g,'>');
-}
-
-function copyCmd(){
-  const t=document.getElementById('pushCmd').textContent;
-  navigator.clipboard.writeText(t).then(()=>showToast('📋 命令已复制！粘贴到终端执行即可'));
-}
-
-function showToast(m){
-  const t=document.getElementById('toast'); t.textContent=m; t.classList.add('show');
-  setTimeout(()=>t.classList.remove('show'),2500);
-}
-
-loadFromRemote();
+loadData();
 </script>
 </body>
 </html>
